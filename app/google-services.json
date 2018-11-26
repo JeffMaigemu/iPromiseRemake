@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "134834446949",
+    "firebase_url": "https://ipromiseremake.firebaseio.com",
+    "project_id": "ipromiseremake",
+    "storage_bucket": "ipromiseremake.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:134834446949:android:db721b29a96c9823",
+        "android_client_info": {
+          "package_name": "maigemu.com.ipromiseremake"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "134834446949-87gi7mekm5oo2tq1k8ndtt4lkjoe2ans.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7NlqMLqC0ppGWnobTyfdoguEyY8TKTCk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
