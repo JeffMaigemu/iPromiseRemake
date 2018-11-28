@@ -175,7 +175,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                     alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
-                            startActivity(new Intent(UserDetailsActivity.this, MainActivity.class));
+                            startActivity(new Intent(UserDetailsActivity.this, LoginActivity.class));
 
                         }
                     });
