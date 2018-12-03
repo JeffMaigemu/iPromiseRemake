@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         if(userOnline != null) {
             userID = userOnline.getUid();
 
-            mDatabaseFirstName = mDatabaseUsers.child(userID);
+            //mDatabaseFirstName = mDatabaseUsers.child(userID);
             authListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -155,11 +155,15 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            signOut();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -184,5 +188,21 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void signOut() {
+        new AlertDialog.Builder (this)
+                .setTitle("Sign Out")
+                .setMessage("Do you really wish to Sign Out from your account?")
+                .setIcon(R.mipmap.ic_launcher_round)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        auth.signOut();
+
+                    }
+                })
+                .setNegativeButton("No", null).show();
+
     }
 }

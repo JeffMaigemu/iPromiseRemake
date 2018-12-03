@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -158,6 +159,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
                     createUser(email, firstName, lastName, phone, occupation,
                             LGA, indigene, marital, age);
+
 
                     AlertDialog alertDialog = new AlertDialog.Builder(
                             UserDetailsActivity.this).create();
@@ -302,7 +304,17 @@ public class UserDetailsActivity extends AppCompatActivity {
         User userAdd = new User( email, firstName, lastName, phone, occupation,
                 LGA, indegeneStatus, maritalStatus, ageCategory);
 
-        mFirebaseDatabase.child(userId).setValue(userAdd);
+        mFirebaseDatabase.child(userId).setValue(userAdd).addOnCompleteListener(UserDetailsActivity.this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Log.i("Success","Yes");
+                }else {
+                    Log.i("fail","No"+task.getException());
+                }
+            }
+        });
+
 
         progressBar.setVisibility(View.GONE);
         btnUploadUserDetails.setEnabled(true);
