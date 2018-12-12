@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -177,7 +179,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                     alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
-                            startActivity(new Intent(UserDetailsActivity.this, LoginActivity.class));
+                            startActivity(new Intent(UserDetailsActivity.this, MainActivity.class));
 
                         }
                     });
@@ -286,41 +288,49 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     private void createUser( String email, String firstName, String lastName, String phone, String occupation,
                              String LGA, String indegeneStatus, String maritalStatus, String ageCategory) {
-        // TODO
-        // In real apps this userId should be fetched
-        // by implementing firebase auth
-
 
 
         btnUploadUserDetails.setEnabled(false);
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
             userId = user.getUid();
+
+            User userAdd = new User( email, firstName, lastName, phone, occupation,
+                    LGA, indegeneStatus, maritalStatus, ageCategory);
+
+            mFirebaseDatabase.child(userId).setValue(userAdd).addOnCompleteListener(UserDetailsActivity.this, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                        Log.i("byJeff","Yes");
+                        Intent settingsIntent = new Intent(UserDetailsActivity.this, MainActivity.class);
+                        startActivity(settingsIntent);
+                    }else {
+                        Log.i("byJeff","No"+task.getException());
+                    }
+                }
+            });
+
+
         } else {
             // No user is signed in
         }
-
-
-        User userAdd = new User( email, firstName, lastName, phone, occupation,
-                LGA, indegeneStatus, maritalStatus, ageCategory);
-
-        mFirebaseDatabase.child(userId).setValue(userAdd).addOnCompleteListener(UserDetailsActivity.this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    Log.i("Success","Yes");
-                }else {
-                    Log.i("fail","No"+task.getException());
-                }
-            }
-        });
-
 
         progressBar.setVisibility(View.GONE);
         btnUploadUserDetails.setEnabled(true);
         sendVerificationEmail();
 
         // addUserChangeListener();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void sendVerificationEmail()

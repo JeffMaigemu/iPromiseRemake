@@ -71,16 +71,34 @@ public class MainActivity extends AppCompatActivity
 
         final FirebaseUser userOnline = FirebaseAuth.getInstance().getCurrentUser();
         if(userOnline != null) {
+
             userID = userOnline.getUid();
+
+            boolean emailVerified = userOnline.isEmailVerified();
+
+            if (!emailVerified){
+                AlertDialog alertDialog = new AlertDialog.Builder(
+                        MainActivity.this).create();
+                alertDialog.setTitle("Verify Email");
+                alertDialog.setMessage("Check the email you used to register on this app for a verification message from us. Click the link in the email, and you will be verified. Then log in again");
+                alertDialog.setIcon(R.drawable.logo_one);
+                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        signOut();
+                    }
+                });
+
+                // Showing Alert Message
+                alertDialog.show();
+
+            }
 
             //mDatabaseFirstName = mDatabaseUsers.child(userID);
             authListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user == null) {
+                if (userOnline == null) {
                         // user auth state is changed - user is null
                         // launch login activity
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -88,31 +106,6 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     else {
-
-
-
-                        boolean emailVerified = user.isEmailVerified();
-
-
-                        if (!emailVerified){
-                            AlertDialog alertDialog = new AlertDialog.Builder(
-                                    MainActivity.this).create();
-                            alertDialog.setTitle("Verify Email");
-                            alertDialog.setMessage("Check the email you used to register on this app for a verification message from us. Click the link in the email, and you will be verified. Then log in again");
-                            alertDialog.setIcon(R.drawable.logo_one);
-                            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    auth.signOut();
-
-                                }
-                            });
-
-                            // Showing Alert Message
-                            alertDialog.show();
-
-                        }
-
 
                     }
                 }
@@ -191,18 +184,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void signOut() {
-        new AlertDialog.Builder (this)
-                .setTitle("Sign Out")
-                .setMessage("Do you really wish to Sign Out from your account?")
-                .setIcon(R.mipmap.ic_launcher_round)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        auth.signOut();
 
-                    }
-                })
-                .setNegativeButton("No", null).show();
+        auth.signOut();
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        finish();
+
 
     }
 }
